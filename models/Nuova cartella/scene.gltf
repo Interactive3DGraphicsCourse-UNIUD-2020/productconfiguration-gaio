@@ -1,0 +1,472 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 1265,
+      "max": [
+        31.692165374755859,
+        52.642189025878906,
+        1.4631004333496094
+      ],
+      "min": [
+        -32.40838623046875,
+        -50.962669372558594,
+        -79.869850158691406
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 15180,
+      "componentType": 5126,
+      "count": 1265,
+      "max": [
+        0.99950224161148071,
+        0.99991410970687866,
+        1
+      ],
+      "min": [
+        -0.99950224161148071,
+        -0.99992108345031738,
+        -1
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 1265,
+      "max": [
+        1,
+        1,
+        0.99950891733169556,
+        1
+      ],
+      "min": [
+        -1,
+        -0.99794483184814453,
+        -0.99969255924224854,
+        -1
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 1265,
+      "max": [
+        1,
+        0.99998462200164795
+      ],
+      "min": [
+        0.0050284410826861858,
+        0.050284482538700104
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 6072,
+      "max": [
+        1264
+      ],
+      "min": [
+        0
+      ],
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 30360,
+      "componentType": 5126,
+      "count": 278,
+      "max": [
+        5.3392171859741211,
+        87.757057189941406,
+        30.859375
+      ],
+      "min": [
+        -6.0554423332214355,
+        -17.995185852050781,
+        -91.099327087402344
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 33696,
+      "componentType": 5126,
+      "count": 278,
+      "max": [
+        0.99930942058563232,
+        0.64835011959075928,
+        0.78589999675750732
+      ],
+      "min": [
+        -0.9993094801902771,
+        -0.79744958877563477,
+        -0.70876646041870117
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 20240,
+      "componentType": 5126,
+      "count": 278,
+      "max": [
+        0.72516024112701416,
+        0.87852907180786133,
+        0.99770599603652954,
+        1
+      ],
+      "min": [
+        -0.63493067026138306,
+        -0.99979954957962036,
+        -0.97283881902694702,
+        1
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 10120,
+      "componentType": 5126,
+      "count": 278,
+      "max": [
+        0.99957960844039917,
+        0.99845951795578003
+      ],
+      "min": [
+        0,
+        0
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 24288,
+      "componentType": 5125,
+      "count": 990,
+      "max": [
+        277
+      ],
+      "min": [
+        0
+      ],
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "Timothy Hsu (https://sketchfab.com/timothyhsu)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/pbr-corinthian-helmet-793a3eb779454e8db5552ac934f20098",
+      "title": "PBR Corinthian Helmet"
+    },
+    "generator": "Sketchfab-4.77.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 28248,
+      "byteOffset": 0,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 12344,
+      "byteOffset": 28248,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 37032,
+      "byteOffset": 40592,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 24688,
+      "byteOffset": 77624,
+      "byteStride": 16,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 102312,
+      "uri": "scene.bin"
+    }
+  ],
+  "images": [
+    {
+      "uri": "textures/Scene_-_Root_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/Scene_-_Root_baseColor.png"
+    },
+    {
+      "uri": "textures/Scene_-_Root_normal.png"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": false,
+      "name": "Scene_-_Root",
+      "normalTexture": {
+        "index": 2,
+        "scale": 1,
+        "texCoord": 0
+      },
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "baseColorTexture": {
+          "index": 1,
+          "texCoord": 0
+        },
+        "metallicFactor": 1,
+        "metallicRoughnessTexture": {
+          "index": 0,
+          "texCoord": 0
+        },
+        "roughnessFactor": 1
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "helmet_low__0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TANGENT": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "plume_low__0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 6,
+            "POSITION": 5,
+            "TANGENT": 7,
+            "TEXCOORD_0": 8
+          },
+          "indices": 9,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "name": "RootNode (gltf orientation matrix)",
+      "rotation": [
+        -0.70710678118654746,
+        -0,
+        -0,
+        0.70710678118654757
+      ]
+    },
+    {
+      "children": [
+        2
+      ],
+      "name": "RootNode (model correction matrix)"
+    },
+    {
+      "children": [
+        3
+      ],
+      "matrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "name": "16df44e099344d2ba29cab5bda343ba1.fbx"
+    },
+    {
+      "children": [
+        4,
+        7
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        5
+      ],
+      "matrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.96458558497538716,
+        -0.26377006891929583,
+        0,
+        0,
+        0.26377006891929583,
+        0.96458558497538716,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "name": "helmet_low"
+    },
+    {
+      "children": [
+        6
+      ],
+      "matrix": [
+        1,
+        0,
+        -0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0.35811042785644531,
+        -0.24796390533447266,
+        38.224281311035156,
+        1
+      ],
+      "name": ""
+    },
+    {
+      "mesh": 0,
+      "name": "helmet_low__0"
+    },
+    {
+      "children": [
+        8
+      ],
+      "matrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.96458558497538716,
+        -0.26377006891929583,
+        0,
+        0,
+        0.26377006891929583,
+        0.96458558497538716,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "name": "plume_low"
+    },
+    {
+      "children": [
+        9
+      ],
+      "matrix": [
+        1,
+        0,
+        -0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0.35811042785644531,
+        -0.24796390533447266,
+        38.224281311035156,
+        1
+      ],
+      "name": ""
+    },
+    {
+      "mesh": 1,
+      "name": "plume_low__0"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "OSG_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    }
+  ]
+}
+

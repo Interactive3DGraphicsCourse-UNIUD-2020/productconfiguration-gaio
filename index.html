@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+	<head>
+	    <meta charset="utf-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	    <meta name="description" content="A layout example that shows off a responsive photo gallery.">    <title>Photo Gallery &ndash; Layout Examples &ndash; Pure</title>    
+	    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-" crossorigin="anonymous">
+	    
+	    <!--[if lte IE 8]>
+	        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/grids-responsive-old-ie-min.css">
+	    <![endif]-->
+	    <!--[if gt IE 8]><!-->
+	        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/grids-responsive-min.css">
+	    <!--<![endif]-->
+	    
+	    
+	        <!--[if lte IE 8]>
+	            <link rel="stylesheet" href="css/layouts/gallery-old-ie.css">
+	        <![endif]-->
+	        <!--[if gt IE 8]><!-->
+	            <link rel="stylesheet" href="css/layouts/gallery.css">
+	        <!--<![endif]-->
+	</head>
+	<body>
+		<script src="libs/three.js"></script>
+		<script src="libs/stats.min.js"></script>
+		<script src="libs/OrbitControls.js"></script>
+		<script src='libs/dat.gui.min.js'></script>
+		<script src='libs/GLTFLoader.js'></script>
+		<script src='libs/BufferGeometryUtils.js'></script>
+
+		<script src="setting.js"></script>
+		<script src="funzioni.js"></script>
+		<script type="text/javascript">
+			function cambiaMateriale(tipo){
+				console.log(tipo);
+				cambiaMaterialeElmo(tipo);
+			}
+
+		</script>
+
+		<!-- shaders -->
+		<script type="text/x-glsl" id="vertex_glossy">
+			precision highp float;
+			precision highp int;
+			attribute vec4 tangent;
+			varying vec3 vNormal;
+			varying vec3 vTangent;
+			varying vec3 vBitangent;
+			varying vec3 vPosition;
+			varying vec2 vUv;
+
+			void main() {
+				vec4 vPos = modelViewMatrix * vec4( position, 1.0 );
+				vPosition = vPos.xyz;
+				vNormal = normalize(normalMatrix * normal);
+				vec3 objectTangent = vec3( tangent.xyz );
+				vec3 transformedTangent = normalMatrix * objectTangent;
+				vTangent = normalize( transformedTangent );
+				vBitangent = normalize( cross( vNormal, vTangent ) * tangent.w );
+				vUv = uv;
+				gl_Position = projectionMatrix * vPos;
+			}
+		</script>
+
+		<script type="text/x-glsl" id="fragment_glossy">
+			precision highp float;
+			precision highp int;
+			varying vec3 vNormal;
+			varying vec3 vTangent;
+			varying vec3 vBitangent;
+			varying vec3 vPosition;
+			varying vec2 vUv;
+			uniform vec3 cspec;
+			uniform sampler2D normalMap;
+			uniform samplerCube envMap;
+			uniform vec2 normalScale;
+			uniform float roughness;
+
+			const float PI = 3.14159;
+			#define saturate(a) clamp( a, 0.0, 1.0 )
+
+			float pow2( const in float x ) { return x*x; }
+
+			float getSpecularMIPLevel( const in float blinnShininessExponent, const in int maxMIPLevel ) {
+		 		float maxMIPLevelScalar = float( maxMIPLevel );
+		 		float desiredMIPLevel = maxMIPLevelScalar - 0.79248 - 0.5 * log2( pow2( blinnShininessExponent ) + 1.0 );
+		 		return clamp( desiredMIPLevel, 0.0, maxMIPLevelScalar );
+		 	}
+
+			float GGXRoughnessToBlinnExponent( const in float ggxRoughness ) {
+		  		return ( 2.0 / pow2( ggxRoughness + 0.0001 ) - 2.0 );
+		  	}
+
+			// http://en.wikibooks.org/wiki/GLSL_Programming/Applying_Matrix_Transformations
+			vec3 inverseTransformDirection( in vec3 dir, in mat4 matrix ) {
+				return normalize( ( vec4( dir, 0.0 ) * matrix ).xyz );
+			}
+
+			vec3 BRDF_Specular_GGX_Environment( vec3 normal, vec3 viewDir, const in vec3 cspec, const in float roughness ) {
+
+				float dotNV = saturate( dot( normal, viewDir ) );
+				const vec4 c0 = vec4( - 1, - 0.0275, - 0.572, 0.022 );
+				const vec4 c1 = vec4( 1, 0.0425, 1.04, - 0.04 );
+				vec4 r = roughness * c0 + c1;
+				float a004 = min( r.x * r.x, exp2( - 9.28 * dotNV ) ) * r.x + r.y;
+				vec2 AB = vec2( -1.04, 1.04 ) * a004 + r.zw;
+				return cspec * AB.x + AB.y;
+
+			}
+
+			void main() {
+				vec3 normal = normalize( vNormal );
+				vec3 tangent = normalize( vTangent );
+				vec3 bitangent = normalize( vBitangent );
+				mat3 vTBN = mat3( tangent, bitangent, normal );
+				vec3 mapN = texture2D( normalMap, vUv ).xyz * 2.0 - 1.0;
+				//mapN.xy = normalScale * mapN.xy;
+				vec3 n = normalize( vTBN * mapN );
+				vec3 v = normalize( -vPosition);
+				vec3 vReflect = reflect(vPosition,n);
+				vec3 r = inverseTransformDirection( vReflect, viewMatrix );
+
+				float blinnShininessExponent = GGXRoughnessToBlinnExponent(roughness);
+				float specularMIPLevel = getSpecularMIPLevel(blinnShininessExponent,8 );
+
+	 			vec3 envLight = textureCubeLodEXT( envMap, vec3(-r.x, r.yz), specularMIPLevel ).rgb;
+	 			// texture in sRGB, linearize
+				envLight = pow( envLight, vec3(2.2));
+				vec3 outRadiance = envLight*BRDF_Specular_GGX_Environment(n, v, cspec, roughness);
+				// gamma encode the final value
+				gl_FragColor = vec4(pow( outRadiance, vec3(1.0/2.2)), 1.0);
+				//gl_FragColor = vec4(r,1.0);
+			}
+		</script>
+
+		<script type="text/x-glsl" id="vertex_iem">
+			attribute vec4 tangent;
+			varying vec3 vNormal;
+			varying vec3 vPosition;
+			varying vec3 wPosition;
+			varying vec3 vTangent;
+			varying vec3 vBitangent;
+			varying vec2 vUv;
+
+			void main() {
+				vec4 vPos = modelViewMatrix * vec4( position, 1.0 );
+				vPosition = vPos.xyz;
+				wPosition = (modelMatrix * vec4( position, 1.0 )).xyz;
+				vNormal = normalize(normalMatrix * normal);
+				vec3 objectTangent = vec3( tangent.xyz );
+				vec3 transformedTangent = normalMatrix * objectTangent;
+				vTangent = normalize( transformedTangent );
+				vBitangent = normalize( cross( vNormal, vTangent ) * tangent.w );
+				vUv = uv;
+				gl_Position = projectionMatrix * vPos;
+			}
+		</script>
+
+		<script type="text/x-glsl" id="fragment_iem">
+			varying vec3 vNormal;
+			varying vec3 vTangent;
+			varying vec3 vBitangent;
+			varying vec3 vPosition;
+			varying vec3 wPosition;
+			varying vec2 vUv;
+			uniform sampler2D diffuseMap;
+			uniform sampler2D normalMap;
+			uniform samplerCube irradianceMap;
+			uniform vec2 normalScale;
+			const float PI = 3.14159;
+
+			uniform vec2 textureRepeat;
+
+			vec3 cdiff;
+
+		    vec3 inverseTransformDirection( in vec3 dir, in mat4 matrix ) {
+			    return normalize( ( vec4( dir, 0.0 ) * matrix ).xyz );
+		    }
+
+			void main() {
+				vec3 normal = normalize( vNormal );
+				vec3 tangent = normalize( vTangent );
+				vec3 bitangent = normalize( vBitangent );
+				mat3 vTBN = mat3( tangent, bitangent, normal );
+				vec3 mapN = texture2D( normalMap, vUv ).xyz * 2.0 - 1.0;
+				//mapN.xy = normalScale * mapN.xy;
+				vec3 n = normalize( vTBN * mapN );
+				vec3 v = normalize( -vPosition);
+				vec3 worldN = inverseTransformDirection( n, viewMatrix );
+				vec3 worldV = cameraPosition - wPosition ;
+				vec3 r = normalize( reflect(-worldV,worldN));
+				// small quantity to prevent divisions by 0
+				float nDotv = max(dot( n, v ),0.000001);
+				// negate x to account for how cubemap is displayed on background
+				vec3 irradiance = textureCube( irradianceMap, worldN).rgb;
+				// texture in sRGB, linearize
+				irradiance = pow( irradiance, vec3(2.2));
+				cdiff = texture2D( diffuseMap, vUv  *textureRepeat).rgb;
+				// texture in sRGB, linearize
+				cdiff = pow( cdiff, vec3(2.2));
+				vec3 outRadiance = cdiff*irradiance;
+				// gamma encode the final value
+				gl_FragColor = vec4(pow( outRadiance, vec3(1.0/2.2)), 1.0);
+			}
+		</script>
+
+		<script type="text/x-glsl" id="vertex_normal">
+	 		attribute vec4 tangent;
+			varying vec3 vNormal;
+			varying vec3 vPosition;
+			varying vec2 vUv;
+			varying vec3 vTangent;
+			varying vec3 vBitangent;
+
+			void main() {
+				vec4 vPos = modelViewMatrix * vec4( position, 1.0 );
+				vPosition = vPos.xyz;
+				vNormal = normalize(normalMatrix * normal);
+				vec3 objectTangent = vec3( tangent.xyz );
+				vec3 transformedTangent = normalMatrix * objectTangent;
+				vTangent = normalize( transformedTangent );
+				vBitangent = normalize( cross( vNormal, vTangent ) * tangent.w );
+				vUv = uv;
+				gl_Position = projectionMatrix * vPos;
+			}
+        </script>
+        <script type="text/x-glsl" id="fragment_normal">
+			varying vec3 vNormal;
+			varying vec3 vTangent;
+			varying vec3 vBitangent;
+			varying vec3 vPosition;
+			varying vec2 vUv;
+			uniform vec3 pointLightPosition; // in world space
+			uniform vec3 clight;
+			uniform vec3 cspec;
+			uniform vec3 cdiff;
+			uniform float roughness;
+			uniform sampler2D normalMap;
+			uniform vec2 normalScale;
+			const float PI = 3.14159;
+
+			vec3 FSchlick(float lDoth) {
+				return (cspec + (vec3(1.0)-cspec)*pow(1.0 - lDoth,5.0));
+			}
+
+			float DGGX(float nDoth, float alpha) {
+				float alpha2 = alpha*alpha;
+				float d = nDoth*nDoth*(alpha2-1.0)+1.0;
+				return (  alpha2 / (PI*d*d));
+			}
+
+			float G1(float dotProduct, float k) {
+				return (dotProduct / (dotProduct*(1.0-k) + k) );
+			}
+
+			float GSmith(float nDotv, float nDotl) {
+					float k = roughness*roughness;
+					return G1(nDotl,k)*G1(nDotv,k);
+			}
+
+
+			void main() {
+				vec4 lPosition = viewMatrix * vec4( pointLightPosition, 1.0 );
+				vec3 l = normalize(lPosition.xyz - vPosition.xyz);
+				vec3 normal = normalize( vNormal );
+				vec3 tangent = normalize( vTangent );
+				vec3 bitangent = normalize( vBitangent );
+				mat3 vTBN = mat3( tangent, bitangent, normal );
+				vec3 mapN = texture2D( normalMap, vUv ).xyz * 2.0 - 1.0;
+				//mapN.xy = normalScale * mapN.xy;
+				vec3 n = normalize( vTBN * mapN );
+				vec3 v = normalize( -vPosition);
+				vec3 h = normalize( v + l);
+				// small quantity to prevent divisions by 0
+				float nDotl = max(dot( n, l ),0.000001);
+				float lDoth = max(dot( l, h ),0.000001);
+				float nDoth = max(dot( n, h ),0.000001);
+				float vDoth = max(dot( v, h ),0.000001);
+				float nDotv = max(dot( n, v ),0.000001);
+				vec3 fresnel = FSchlick(lDoth);
+				vec3 BRDF = (vec3(1.0)-fresnel)*cdiff/PI + fresnel*GSmith(nDotv,nDotl)*DGGX(nDoth,roughness*roughness)/
+					(4.0*nDotl*nDotv);
+				vec3 outRadiance = PI* clight * nDotl * BRDF;
+				// gamma encode the final value
+				gl_FragColor = vec4(pow( outRadiance, vec3(1.0/2.2)), 1.0);
+			}
+        </script>
+		<div>
+    <div id="header" class="header">
+
+        <div class="pure-menu pure-menu-horizontal">
+            <a class="pure-menu-heading" href=""><img id="logo"src="images/logo.png"></a>
+
+            <ul class="pure-menu-list">
+                <li class="pure-menu-item pure-menu-selected"><a href="#" class="pure-menu-link">Offerte</a></li>
+                <li class="pure-menu-item"><a href="#" class="pure-menu-link">Categorie</a></li>
+                <li class="pure-menu-item"><a href="#" class="pure-menu-link">Contatti</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="pure-g">
+        <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+            <script id="can" src="main.js"></script>
+        </div>
+        <div id = "menu" class="text-box pure-u-1 pure-u-md-1-2 pure-u-lg-2-3">
+            <div class="l-box">
+                <h1 id="titolo" class="text-box-head">Elmo Legionario Imperiale Romano</h1>
+                <h2 class="text-box-subhead">Personalizza il tuo modello.</h2>
+            </div>
+            <div class="caratteristiche">
+            	<h3 class="text-box-subhead">Materiale Elmo</h3>
+            	<ul>
+            		<li><a onClick="cambiaMaterialeElmo('Acciaio',null);setPrezzo(50)" href="#">Acciaio</a></li>
+            		<li><a onClick="cambiaMaterialeElmo('Zinco',null);setPrezzo(70)" href="#">Zinco</a></li>
+            		<li><a onClick="cambiaMaterialeElmo('Rame',null);setPrezzo(100)" href="#">Rame</a></li>
+            	</ul>
+            	<h3 class="text-box-subhead">Materiale Pennacchio</h3>
+            	<ul class="hor">
+            		<li><a onClick="cambiaMaterialeElmo(null,'Rosso')" href="#">Pennachio rosso</a></li>
+            		<li><a onClick="cambiaMaterialeElmo(null,'Bianco')" href="#">Pennacchio bianco</a></li>
+            	</ul>
+            	<h3 class="text-box-subhead">Ambiente</h3>
+            	<ul>
+            		<li><a onClick="cambiaAmbiente('Prato')" href="#">Prato</a></li>
+            		<li><a onClick="cambiaAmbiente('Neve')" href="#">Neve</a></li>
+            		<li><a onClick="cambiaAmbiente('Colosseo')" href="#">Colosseo</a></li>
+        		</ul>
+        		<h3 class="text-box-subhead">Illuminazione</h3>
+            	<ul><li><a onClick="inserisciLuceManuale('')" href="#">Illuminazione manuale</a></li></ul>
+        		<h3 class="text-box-subhead">Edizione modello</h3>
+            	<ul class="hor">
+            		<li><a onClick="cambiaModelloElmo('Antico');setPrezzo(170)" href="#">edizione limitata</a></li>
+            		<li><a onClick="cambiaModelloElmo('Base');setPrezzo(50)" href="#">base</a></li>
+            	</ul>
+            </div>
+        </div>
+
+    	<div id="acquisto" class="pure-u-1" >
+    		<p>Prezzo: <span id="prezzo">50</span>€</p>
+    		<button class="button-success pure-button">Aggiungi al carrello</button><br>
+    		<button class="button-success pure-button">Acquista</button>
+    	</div>
+        <div id="descrizione" class="pure-u-1">
+            <div class="l-box">
+                <h2>Descrizione del prodotto</h2>
+
+                <p>
+                    L’ elmo romano è famoso per la sua bellezza e vistosità. Alcuni hanno un pennacchio di crine di cavallo nella parte superiore centrale, e presentavano decorazioni incise su tutta la superficie, convertendoli in autentiche opere d’ arte, che abbiamo potuto ammirare in molti film al cinema o in tv.
+                </p>
+
+                <p>
+                    Alcuni elmi romani avevano una protezione interne in tessuto di lana spessa o di pezze di lino imbottite. Eventualmente si poteva usare una specie di berretto imbottito da indossare sotto l’ elmo.
+
+					Le creste o i pennacchi erano solitamente di colore rosso, e solo i centurioni li usavano in battaglia; erano poste trasveralmente, nel senso che andava da orecchio a orecchio, per distinguersi e rendersi più visibili dalle loro truppe.
+					Tribuni e legionari usavano invece creste e pennacchi la cui direzione andava dalla fronte alla nuca.
+
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer">
+        View the source of this layout to learn more. Made with love by the YUI Team.
+    </div>
+</div>
+
+	</body>
+</html>

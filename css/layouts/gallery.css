@@ -1,0 +1,175 @@
+body {
+    color: #666;
+}
+
+canvas{
+    position: absolute;
+    top: 7em;
+    left: 3em;
+}
+.header{
+    margin-bottom: 1em;
+    background-color: #edecee;
+}
+h2{
+    font-size: 1em;
+}
+#acquisto{
+    width: auto;
+    background-color: rgba(215, 229, 222, 0.7);
+    margin-left: 1.5em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    font-size:2em;
+    border: 1px solid green;
+    padding: 0.5em;
+}
+#menu{    
+    width: 27%;
+    height: 36em;
+    position: relative;
+    margin-top: 1%;
+    margin-left: 70%;
+}
+#descrizione{
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    margin-left: 3em;
+    text-align: justify;
+    width: 66.5%;
+    height: auto;
+    background-color: #edecee;
+}
+ul.hor li {
+  display:inline;
+  margin-right: 2em;
+}
+h3{
+    text-align: center;
+}
+.caratteristiche ul li a{
+    text-decoration: none;
+    list-style: none;
+    color: #FFF;
+}
+.caratteristiche ul li {
+    list-style: none;
+}
+
+.caratteristiche ul  {
+    list-style: none;
+}
+
+.l-box {
+    padding-left: 20%;
+    padding-right: 2em;
+}
+
+.header .pure-menu {
+    border-bottom-color: black;
+    border-radius: 0;
+}
+
+.pure-menu-link {
+    padding: 1em .7em;
+}
+
+.photo-box, .text-box {
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+}
+
+
+
+
+
+
+.photo-box aside span {
+    color: #aaa;
+}
+
+.photo-box aside span a {
+    color: #ccc;
+    text-decoration: none;
+}
+
+.text-box {
+    background: rgb(49, 49, 49); /* bluish grey */
+    color: rgb(255, 190, 94); /* steel blue */
+}
+
+.text-box-head {
+    color: #fff;
+    padding-bottom: 0.2em;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 24px;
+}
+.caratteristiche a {
+  
+}
+
+#menu a:hover{
+    text-decoration: none;
+
+    border-radius: 25px;
+    padding: 4px;
+    color:black;
+    background-color: rgba(186, 233, 222,0.8);
+}
+.text-box-subhead {
+
+    font-weight: normal;
+    letter-spacing: 0.1em;
+
+}
+
+.form-box {
+    text-align: center;
+    font-size: 120%;
+    border-bottom: 1px solid #eee;
+}
+
+.form-box .pure-button {
+    background-color: #61B842;
+    color: white;
+    vertical-align: top;
+    font-size: 85%;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+    margin: 0.3em;
+}
+.pure-form input[type] {
+    margin: 0.3em auto;
+    text-align: center;
+}
+
+.footer {
+    background: #111;
+    color: #666;
+    text-align: center;
+    padding: 1em;
+    font-size: 80%;
+}
+
+@media (min-width: 30em) {
+    .photo-box, .text-box {
+        text-align: left;
+    }
+
+}
+.button-success {
+    margin-top: 3px;
+    color: white;
+    border-radius: 4px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.button-success {
+    background: rgb(28, 184, 65); /* this is a green */
+}
+
