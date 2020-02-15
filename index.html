@@ -3,7 +3,8 @@
 	<head>
 	    <meta charset="utf-8">
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	    <meta name="description" content="A layout example that shows off a responsive photo gallery.">    <title>Photo Gallery &ndash; Layout Examples &ndash; Pure</title>    
+	    <meta name="description" content="A layout example that shows off a responsive photo gallery.">
+	    <title>Secondo progetto 3D Desing - Massimiliano Gaio</title>    
 	    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-" crossorigin="anonymous">
 	    
 	    <!--[if lte IE 8]>
@@ -29,8 +30,8 @@
 		<script src='libs/GLTFLoader.js'></script>
 		<script src='libs/BufferGeometryUtils.js'></script>
 
-		<script src="setting.js"></script>
-		<script src="funzioni.js"></script>
+		<script src="script/setting.js"></script>
+		<script src="script/funzioni.js"></script>
 		<script type="text/javascript">
 			function cambiaMateriale(tipo){
 				console.log(tipo);
@@ -122,8 +123,11 @@
 				vec3 r = inverseTransformDirection( vReflect, viewMatrix );
 
 				float blinnShininessExponent = GGXRoughnessToBlinnExponent(roughness);
+				//inserisco il livello della mipmap in base alla roughness.
+				//8 è il livello massimo
 				float specularMIPLevel = getSpecularMIPLevel(blinnShininessExponent,8 );
 
+				//accedo alla texturecube in base al vettore riflessione e il livello di mipmap
 	 			vec3 envLight = textureCubeLodEXT( envMap, vec3(-r.x, r.yz), specularMIPLevel ).rgb;
 	 			// texture in sRGB, linearize
 				envLight = pow( envLight, vec3(2.2));
@@ -279,6 +283,12 @@
 				float vDoth = max(dot( v, h ),0.000001);
 				float nDotv = max(dot( n, v ),0.000001);
 				vec3 fresnel = FSchlick(lDoth);
+
+				//fresnel -> frazione di luce entrante che viene riflessa
+				//GSmith -> probabilità faccetta orientata sia illuminata e visibile
+				//DGGX -> concentrazione [0,1] delle normali delle micro-faccette che puntano alla direzione
+				//BRDF -> sommo la parte diffusiva e quella speculare
+
 				vec3 BRDF = (vec3(1.0)-fresnel)*cdiff/PI + fresnel*GSmith(nDotv,nDotl)*DGGX(nDoth,roughness*roughness)/
 					(4.0*nDotl*nDotv);
 				vec3 outRadiance = PI* clight * nDotl * BRDF;
@@ -302,7 +312,7 @@
 
     <div class="pure-g">
         <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
-            <script id="can" src="main.js"></script>
+            <script id="can" src="script/main.js"></script>
         </div>
         <div id = "menu" class="text-box pure-u-1 pure-u-md-1-2 pure-u-lg-2-3">
             <div class="l-box">
@@ -310,25 +320,30 @@
                 <h2 class="text-box-subhead">Personalizza il tuo modello.</h2>
             </div>
             <div class="caratteristiche">
+            	<hr>
             	<h3 class="text-box-subhead">Materiale Elmo</h3>
             	<ul>
             		<li><a onClick="cambiaMaterialeElmo('Acciaio',null);setPrezzo(50)" href="#">Acciaio</a></li>
             		<li><a onClick="cambiaMaterialeElmo('Zinco',null);setPrezzo(70)" href="#">Zinco</a></li>
             		<li><a onClick="cambiaMaterialeElmo('Rame',null);setPrezzo(100)" href="#">Rame</a></li>
             	</ul>
+            	<hr>
             	<h3 class="text-box-subhead">Materiale Pennacchio</h3>
             	<ul class="hor">
             		<li><a onClick="cambiaMaterialeElmo(null,'Rosso')" href="#">Pennachio rosso</a></li>
             		<li><a onClick="cambiaMaterialeElmo(null,'Bianco')" href="#">Pennacchio bianco</a></li>
             	</ul>
+            	<hr>
             	<h3 class="text-box-subhead">Ambiente</h3>
             	<ul>
             		<li><a onClick="cambiaAmbiente('Prato')" href="#">Prato</a></li>
             		<li><a onClick="cambiaAmbiente('Neve')" href="#">Neve</a></li>
             		<li><a onClick="cambiaAmbiente('Colosseo')" href="#">Colosseo</a></li>
         		</ul>
+        		<hr>
         		<h3 class="text-box-subhead">Illuminazione</h3>
             	<ul><li><a onClick="inserisciLuceManuale('')" href="#">Illuminazione manuale</a></li></ul>
+            	<hr>
         		<h3 class="text-box-subhead">Edizione modello</h3>
             	<ul class="hor">
             		<li><a onClick="cambiaModelloElmo('Antico');setPrezzo(170)" href="#">edizione limitata</a></li>

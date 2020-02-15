@@ -12,7 +12,7 @@ canvas{
     background-color: #edecee;
 }
 h2{
-    font-size: 1em;
+    font-size: 0.9em;
 }
 #acquisto{
     width: auto;
@@ -45,6 +45,7 @@ ul.hor li {
   margin-right: 2em;
 }
 h3{
+    font-size: 0.8em; 
     text-align: center;
 }
 .caratteristiche ul li a{
@@ -61,37 +62,13 @@ h3{
 }
 
 .l-box {
-    padding-left: 20%;
     padding-right: 2em;
+    padding-left: 2em;
 }
 
 .header .pure-menu {
     border-bottom-color: black;
     border-radius: 0;
-}
-
-.pure-menu-link {
-    padding: 1em .7em;
-}
-
-.photo-box, .text-box {
-    overflow: hidden;
-    position: relative;
-    text-align: center;
-}
-
-
-
-
-
-
-.photo-box aside span {
-    color: #aaa;
-}
-
-.photo-box aside span a {
-    color: #ccc;
-    text-decoration: none;
 }
 
 .text-box {
@@ -107,9 +84,6 @@ h3{
     letter-spacing: 0.05em;
     font-size: 24px;
 }
-.caratteristiche a {
-  
-}
 
 #menu a:hover{
     text-decoration: none;
@@ -124,12 +98,6 @@ h3{
     font-weight: normal;
     letter-spacing: 0.1em;
 
-}
-
-.form-box {
-    text-align: center;
-    font-size: 120%;
-    border-bottom: 1px solid #eee;
 }
 
 .form-box .pure-button {
@@ -156,11 +124,10 @@ h3{
     font-size: 80%;
 }
 
-@media (min-width: 30em) {
-    .photo-box, .text-box {
-        text-align: left;
-    }
-
+@media only screen and (max-width: 1500px) {
+  #menu {
+    height: 45em;
+  }
 }
 .button-success {
     margin-top: 3px;
