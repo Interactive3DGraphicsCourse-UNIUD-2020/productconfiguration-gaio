@@ -44,4 +44,5 @@ Inizialmente, ad ogni modifica della configurazione, veniva semplicemente aggiun
 
 ## Crediti
 - Modello: (5.7k vertici) https://sketchfab.com/3d-models/roman-helmet-fe4dc3a4c6a141b795c97e2e94b336a3 ;
-- Texture: (2K) http://www.humus.name .
+- Texture: (2K) http://www.humus.name ;
+- layout di base pagina web: http://purecss.io/ ;
