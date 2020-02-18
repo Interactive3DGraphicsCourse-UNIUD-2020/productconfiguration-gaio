@@ -7,9 +7,20 @@ canvas{
     top: 7em;
     left: 3em;
 }
+#titolo{
+   color: #e06767;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    font-size: 22px;
+}
 .header{
     margin-bottom: 1em;
     background-color: #edecee;
+}
+.footer > a{
+    text-decoration: none;
+    color: white;
+    margin-left: 2em;
 }
 h2{
     font-size: 0.9em;
@@ -74,15 +85,6 @@ h3{
 .text-box {
     background: rgb(49, 49, 49); /* bluish grey */
     color: rgb(255, 190, 94); /* steel blue */
-}
-
-.text-box-head {
-    color: #fff;
-    padding-bottom: 0.2em;
-    font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-size: 24px;
 }
 
 #menu a:hover{

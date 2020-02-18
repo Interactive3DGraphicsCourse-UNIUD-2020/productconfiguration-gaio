@@ -201,6 +201,5 @@ function updateUniforms() {
 }
 
 function setPrezzo(n){
-	console.log("dentro");
 	document.getElementById('prezzo').innerHTML = n;
 }

@@ -50,8 +50,9 @@
 
 05.02.2020
 =============
-- Inserito ultimo shader che produce illuminazione dato un ambiente e una texture
-- Aggiunta voce nel menu per utilizzarlo.
+- Inserito ultimo shader che produce illuminazione dato un ambiente e una texture;
+- aggiunta voce nel menu per utilizzarlo.
+- risolto bug illuminazione viola togliendo il modello vecchio prima di introdurre nella scena quello nuovo.
 
 05.02.2020
 =============
